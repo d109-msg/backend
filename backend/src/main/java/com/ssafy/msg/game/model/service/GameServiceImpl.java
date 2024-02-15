@@ -152,16 +152,11 @@ public class GameServiceImpl implements GameService{
                     result = targetDto.getNickname() + "님은 마피아가 아닙니다.";
                 } else {
                     //랜덤으로 마피아 여부 리턴
-                    Random random = new Random(targetId); // ID를 시드로 사용
-
-                    int num = random.nextInt(25);
-
-                    log.info("useAbility() random : {}", num);
-
-                    if (num % 2 == 0) {
-                        result = targetDto.getNickname() + "님은 마피아가 맞습니다.";
+                    String targetJob = targetDto.getJobId();
+                    if (!GameUtil.getRoleType(targetJob).equals("마피아")) {
+                        return targetDto.getNickname() + "님은 마피아가 맞습니다.";
                     } else {
-                        result = targetDto.getNickname() + "님은 마피아가 아닙니다.";
+                        return targetDto.getNickname() + "님은 마피아가 아닙니다.";
                     }
                 }
 
