@@ -957,7 +957,7 @@ public class GameServiceImpl implements GameService{
             if(dto.getFlagWin() == 1){
                 //이겼을 때
                 totalWinCnt++;
-                if(GameUtil.getRoleType(dto.getJobId()).equals("마피아")) {
+                if(GameUtil.getRoleType(GameUtil.getRoleType(dto.getJobId())).equals("마피아")) {
                     //마피아로 승리했을 때
                     mafiaGameCnt++;
                     mafiaWinCnt++;
