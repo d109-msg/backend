@@ -969,7 +969,7 @@ public class GameServiceImpl implements GameService{
 
             } else if(dto.getFlagWin() == 0) {
                 //졌을 때
-                if(GameUtil.getRoleType(dto.getJobId()).equals("마피아")) {
+                if(GameUtil.getRoleType(GameUtil.getRoleType(dto.getJobId())).equals("마피아")) {
                     //마피아 패배했을 때
                     mafiaGameCnt++;
                 } else {
