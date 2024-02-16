@@ -192,6 +192,7 @@
 				WHERE
 					p.room_id = #{roomId}
 			)
+			ORDER BY RAND()
 			LIMIT 1;
 	</select>
 

@@ -152,11 +152,17 @@ public class GameServiceImpl implements GameService{
                     result = targetDto.getNickname() + "님은 마피아가 아닙니다.";
                 } else {
                     //랜덤으로 마피아 여부 리턴
-                    String targetJob = targetDto.getJobId();
-                    if (!GameUtil.getRoleType(targetJob).equals("마피아")) {
-                        return targetDto.getNickname() + "님은 마피아가 맞습니다.";
+                    Random random = new Random(targetId); // ID를 시드로 사용
+
+                    int num = random.nextInt(25);
+
+                    log.info("useAbility() random : {}", num);
+
+                    if (num % 2 == 0) {
+                        result = targetDto.getNickname() + "님은 마피아가 맞습니다.";
                     } else {
-                        return targetDto.getNickname() + "님은 마피아가 아닙니다.";
+                        result = targetDto.getNickname() + "님은 마피아가 아닙니다.";
+
                     }
                 }
 
@@ -265,32 +271,32 @@ public class GameServiceImpl implements GameService{
                 int targetId = abilityResult.getAbility();
                 ParticipantDto targetDto = gameMapper.getParticipantWithPId(targetId);
 
-//                String result = "";
+                String result = "";
 
-//                if (targetId == participantId) {
-//                    //미치광이가 본인을 찍었다면
-//                    result = targetDto.getNickname() + "는 마피아가 아닙니다.";
-//                } else {
-//                    //랜덤으로 마피아 여부 리턴
-//                    Random random = new Random(targetId); // ID를 시드로 사용
-//
-//                    int num = random.nextInt(25);
-//
-//                    log.info("useAbility() random : {}", num);
-//
-//                    if (num % 2 == 0) {
-//                        result = targetDto.getNickname() + "는 마피아가 맞습니다.";
-//                    } else {
-//                        result = targetDto.getNickname() + "는 마피아가 아닙니다.";
-//                    }
-//                }
-                if (!GameUtil.getRoleType(targetDto.getJobId()).equals("마피아")) {
-                    resultDto.setMessage(targetDto.getNickname() + "님은 마피아가 맞습니다.");
+                if (targetId == participantId) {
+                    //미치광이가 본인을 찍었다면
+                    result = targetDto.getNickname() + "는 마피아가 아닙니다.";
                 } else {
-                    resultDto.setMessage(targetDto.getNickname() + "님은 마피아가 아닙니다.");
-                }
+                    //랜덤으로 마피아 여부 리턴
+                    Random random = new Random(targetId); // ID를 시드로 사용
 
-//                resultDto.setMessage(result);
+                    int num = random.nextInt(25);
+
+                    log.info("useAbility() random : {}", num);
+
+                    if (num % 2 == 0) {
+                        result = targetDto.getNickname() + "는 마피아가 맞습니다.";
+                    } else {
+                        result = targetDto.getNickname() + "는 마피아가 아닙니다.";
+                    }
+                }
+//                if (!GameUtil.getRoleType(targetDto.getJobId()).equals("마피아")) {
+//                    resultDto.setMessage(targetDto.getNickname() + "님은 마피아가 맞습니다.");
+//                } else {
+//                    resultDto.setMessage(targetDto.getNickname() + "님은 마피아가 아닙니다.");
+//                }
+
+                resultDto.setMessage(result);
             } else if(job.equals("스파이")) {
                 ParticipantDto targetDto = gameMapper.getParticipantWithPId(abilityResult.getAbility());
                 
@@ -732,18 +738,18 @@ public class GameServiceImpl implements GameService{
         List<String> result = new ArrayList<>();
 
         //랜덤 직업을 바로 배정
-//        result.addAll(GameUtil.getMafiaRoles(2));
-//        result.addAll(GameUtil.getCivilRoles(num - 2));
-//
-//        Collections.shuffle(result);
+        result.addAll(GameUtil.getMafiaRoles(2));
+        result.addAll(GameUtil.getCivilRoles(num - 2));
 
-        result.add("판사");   //공정한 커닝햄
-        result.add("경찰");      //정의로운 젠킨스
-        result.add("훼방꾼");  //방해되는 드미트리
-        result.add("불침번");  //잠이 없는 니콜슨
-        result.add("의사");   //영리한 제임스
-        result.add("건달");   //건방진 게릭
-        result.add("미치광이");//광적인 켄달
+        Collections.shuffle(result);
+
+//        result.add("판사");   //공정한 커닝햄
+//        result.add("경찰");      //정의로운 젠킨스
+//        result.add("훼방꾼");  //방해되는 드미트리
+//        result.add("불침번");  //잠이 없는 니콜슨
+//        result.add("의사");   //영리한 제임스
+//        result.add("건달");   //건방진 게릭
+//        result.add("미치광이");//광적인 켄달
 
         log.info("getJobs() result : {}", result);
 
@@ -1139,22 +1145,22 @@ public class GameServiceImpl implements GameService{
     @Override
     public void startGroupGame(String roomId, String roomTitle, List<ParticipantIdDto> participantList) throws Exception{
         int numOfPlayers = participantList.size();
-        List<RandomNameDto> randomNicknames = new ArrayList<>();
+        List<RandomNameDto> randomNicknames = null;
 
         log.info("startGroupGame() -> roomId : {}", roomId);
 
         // 각 participant 랜덤 닉네임, 랜덤 직업, 랜덤 이미지로 update
-//        randomNicknames = gameMapper.getRandomNicknames(numOfPlayers);
+        randomNicknames = gameMapper.getRandomNicknames(numOfPlayers);
 
 
 
-        randomNicknames.add(new RandomNameDto("공정한", "커닝햄", "https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player19.png"));
-        randomNicknames.add(new RandomNameDto("정의로운", "드미트리", "https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png"));
-        randomNicknames.add(new RandomNameDto("방해되는", "젠킨스", "https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player2.png"));
-        randomNicknames.add(new RandomNameDto("잠이 없는", "니콜슨", "https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player3.png"));
-        randomNicknames.add(new RandomNameDto("영리한", "제임스", "https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player10.png"));
-        randomNicknames.add(new RandomNameDto("건방진", "게릭", "https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player15.png"));
-        randomNicknames.add(new RandomNameDto("광적인", "켄달", "https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player20.png"));
+//        randomNicknames.add(new RandomNameDto("공정한", "커닝햄", "https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player19.png"));
+//        randomNicknames.add(new RandomNameDto("정의로운", "드미트리", "https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player1.png"));
+//        randomNicknames.add(new RandomNameDto("방해되는", "젠킨스", "https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player2.png"));
+//        randomNicknames.add(new RandomNameDto("잠이 없는", "니콜슨", "https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player3.png"));
+//        randomNicknames.add(new RandomNameDto("영리한", "제임스", "https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player10.png"));
+//        randomNicknames.add(new RandomNameDto("건방진", "게릭", "https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player15.png"));
+//        randomNicknames.add(new RandomNameDto("광적인", "켄달", "https://team109testbucket.s3.ap-northeast-2.amazonaws.com/player20.png"));
 
         List<String> randomJobs = getJobs(numOfPlayers);
 
