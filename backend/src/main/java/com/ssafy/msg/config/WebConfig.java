@@ -34,7 +34,8 @@ public class WebConfig implements WebMvcConfigurer {
 		registry.addInterceptor(userInterceptor)
 				.addPathPatterns("/**")
 //				.excludePathPatterns("/swagger-ui/**", "/swagger-resources/**", "/v3/api-docs/**", "/error/**")
-				.excludePathPatterns("/user/sign-in/**", "/user/sign-up/**", "/user/sign-out/**", "/user/refresh/**", "/user/password/reset/**", "/test/**")
+//				.excludePathPatterns("/user/sign-in/**", "/user/sign-up/**", "/user/sign-out/**", "/user/refresh/**", "/user/password/reset/**", "/test/**")
+				.excludePathPatterns("/user/sign-in/**", "/user/sign-out/**", "/user/refresh/**", "/user/password/reset/**", "/test/**")
 				.excludePathPatterns("/article/guest")
 				.excludePathPatterns("/scheduler/night/**");
 	}
